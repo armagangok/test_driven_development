@@ -9,13 +9,13 @@ import 'package:test_driven_development/models/article_model.dart';
 class NewsService {
   final _articles = List.generate(
     10,
-    (index) => Article(
+    (index) => ArticleModel(
       title: lorem(paragraphs: 1, words: 3),
       content: lorem(paragraphs: 5, words: 100),
     ),
   );
 
-  Future<List<Article>> getArticle() async {
+  Future<List<ArticleModel>> fetchArticleDataList() async {
     await Future.delayed(const Duration(milliseconds: 1500));
     return _articles;
   }
