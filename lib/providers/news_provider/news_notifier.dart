@@ -1,30 +1,26 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:test_driven_development/providers/news_service_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:test_driven_development/providers/news_provider/news_state.dart';
 import 'package:test_driven_development/services/news_service.dart';
-import 'package:test_driven_development/state/news_state.dart';
 
-part 'news_notifier.g.dart';
-
-@riverpod
-class NewsNotifier extends _$NewsNotifier {
-  @override
-  build() async {
-    state = _newsService = ref.read(newsServiceProvider);
-
-    state = NewsLoading();
-    await _fetchProducts();
-
-    return state;
-  }
+class NewsChangeNotifier extends ChangeNotifier {
+  NewsChangeNotifier(this._newsService);
 
   late final NewsService _newsService;
 
+  ArticleState articleState = ArticleInitial();
+
   Future _fetchProducts() async {
+    articleState = ArticleLoading();
+    notifyListeners();
+
     try {
       final data = await _newsService.fetchArticleDataList();
-      state = NewsSuccess(newsResponse: data);
+
+      articleState = ArticleSuccess(articleListData: data);
+      notifyListeners();
     } catch (e) {
-      state = NewsFailure(message: 'Error while fetching news');
+      articleState = ArticleFailure(message: 'Error while fetching news');
+      notifyListeners();
     }
   }
 }

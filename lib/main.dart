@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
+import 'package:test_driven_development/providers/news_provider/news_notifier.dart';
+import 'package:test_driven_development/services/news_service.dart';
 
 void main() {
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => NewsChangeNotifier(NewsService()),
+        ),
+      ],
+      child: const MyApp(),
     ),
   );
 }
