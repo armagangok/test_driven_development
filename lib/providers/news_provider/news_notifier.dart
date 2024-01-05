@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:test_driven_development/providers/news_provider/news_state.dart';
+import 'package:test_driven_development/models/article_model.dart';
 import 'package:test_driven_development/services/news_service.dart';
 
 class NewsChangeNotifier extends ChangeNotifier {
   NewsChangeNotifier(this._newsService);
 
-  late final NewsService _newsService;
+  final NewsService _newsService;
 
-  ArticleState articleState = ArticleInitial();
+  List<ArticleModel> _articles = [];
+  List<ArticleModel> get articles => _articles;
 
-  Future _fetchProducts() async {
-    articleState = ArticleLoading();
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  Future<void> getArticles() async {
+    _isLoading = true;
     notifyListeners();
 
     try {
-      final data = await _newsService.fetchArticleDataList();
+      final data = await _newsService.getArticles();
 
-      articleState = ArticleSuccess(articleListData: data);
+      _articles = data;
+      notifyListeners();
+
+      _isLoading = false;
       notifyListeners();
     } catch (e) {
-      articleState = ArticleFailure(message: 'Error while fetching news');
+      _isLoading = false;
       notifyListeners();
     }
   }

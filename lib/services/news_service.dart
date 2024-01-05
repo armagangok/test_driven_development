@@ -15,7 +15,7 @@ class NewsService {
     ),
   );
 
-  Future<List<ArticleModel>> fetchArticleDataList() async {
+  Future<List<ArticleModel>> getArticles() async {
     await Future.delayed(const Duration(milliseconds: 1500));
     return _articles;
   }

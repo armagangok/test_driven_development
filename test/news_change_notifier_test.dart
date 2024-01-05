@@ -2,19 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test_driven_development/models/article_model.dart';
 import 'package:test_driven_development/providers/news_provider/news_notifier.dart';
-import 'package:test_driven_development/providers/news_provider/news_state.dart';
 import 'package:test_driven_development/services/news_service.dart';
-
-class BadMockNewsService implements NewsService {
-  @override
-  Future<List<ArticleModel>> fetchArticleDataList() async {
-    return [
-      ArticleModel(title: 'Test Title 1', content: 'c ontentcontent con tent conte ntcont ent'),
-      ArticleModel(title: 'Test Title 1', content: 'cont entc ontent content cont entcon tent'),
-      ArticleModel(title: 'Test Title 1', content: 'cont entc  ontent content conte ntcontent'),
-    ];
-  }
-}
 
 class MockNewsService extends Mock implements NewsService {}
 
@@ -32,16 +20,37 @@ void main() {
   test(
     "İnitial values are correct.",
     () {
-      final state = newsChangeNotifier.articleState;
-      if (state is ArticleInitial) {
-      } else if (state is ArticleLoading) {
-      } else if (state is ArticleSuccess) {
-        expect(state.articleListData, []);
-      } else if (state is ArticleFailure) {
-      } else {
-        "";
-        throw "Unknown State For Article";
-      }
+      expect(newsChangeNotifier.articles, []);
+      expect(newsChangeNotifier.isLoading, false);
     },
   );
+
+  group("Get articles.", () {
+    var articlesFromService = [
+      ArticleModel(title: "title1", content: "test content1"),
+      ArticleModel(title: "title2", content: "test content2"),
+      ArticleModel(title: "title3", content: "test content3"),
+    ];
+    void arrangeNewsServiceReturns3Articles() {
+      when(() => mockNewsService.getArticles()).thenAnswer((_) async => articlesFromService);
+    }
+
+    test("Get articles using NewsService.", () async {
+      when(() => mockNewsService.getArticles()).thenAnswer((invocation) async => []);
+      await newsChangeNotifier.getArticles();
+      verify(() => mockNewsService.getArticles()).called(1);
+    });
+
+    test(
+      "Indicates loading of data, sets articles to the ones from the service.",
+      () async {
+        arrangeNewsServiceReturns3Articles();
+        final future = newsChangeNotifier.getArticles();
+        expect(newsChangeNotifier.isLoading, true);
+        await future;
+        expect(newsChangeNotifier.articles, articlesFromService);
+        expect(newsChangeNotifier.isLoading, false);
+      },
+    );
+  });
 }
