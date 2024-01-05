@@ -18,10 +18,13 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: ListTile(
+      appBar: AppBar(
         title: Text(widget.article.title),
-        subtitle: Text(widget.article.content),
+      ),
+      body: SingleChildScrollView(
+        child: ListTile(
+          subtitle: Text(widget.article.content),
+        ),
       ),
     );
   }
