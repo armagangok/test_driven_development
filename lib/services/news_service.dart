@@ -8,7 +8,7 @@ import 'package:test_driven_development/models/article_model.dart';
 
 class NewsService {
   final _articles = List.generate(
-    10,
+    20,
     (index) => ArticleModel(
       title: lorem(paragraphs: 1, words: 3),
       content: lorem(paragraphs: 5, words: 100),
