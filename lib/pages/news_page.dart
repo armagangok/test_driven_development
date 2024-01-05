@@ -3,22 +3,20 @@ import 'package:provider/provider.dart';
 import 'package:test_driven_development/pages/news_detail_page.dart';
 import 'package:test_driven_development/providers/news_provider/news_notifier.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class NewsPage extends StatefulWidget {
+  const NewsPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<NewsPage> createState() => _NewsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _NewsPageState extends State<NewsPage> {
   late final NewsChangeNotifier newsProvider;
   @override
   void initState() {
     newsProvider = context.read<NewsChangeNotifier>();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      newsProvider.getArticles();
-    });
+    Future.microtask(() => newsProvider.getArticles());
 
     super.initState();
   }

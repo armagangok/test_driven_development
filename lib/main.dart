@@ -3,20 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:test_driven_development/providers/news_provider/news_notifier.dart';
 import 'package:test_driven_development/services/news_service.dart';
 
-import 'pages/home_page.dart';
+import 'pages/news_page.dart';
 
-void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => NewsChangeNotifier(NewsService()),
-        ),
-      ],
-      child: const MyApp(),
-    ),
-  );
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -24,8 +13,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => NewsChangeNotifier(NewsService()),
+        ),
+      ],
+      child: const MaterialApp(
+        home: NewsPage(),
+      ),
     );
   }
 }
