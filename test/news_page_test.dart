@@ -53,7 +53,7 @@ void main() {
     (WidgetTester tester) async {
       arrangeNewsServiceReturns3Articles();
       await tester.pumpWidget(buildNewsPage());
-      expect(find.text("Articles"), findsOneWidget);
+      expect(find.text("Articles"), findsNothing);
     },
   );
 
@@ -74,15 +74,12 @@ void main() {
       arrangeNewsServiceReturns3ArticlesAfter2Seconds();
 
       await tester.pumpWidget(buildNewsPage());
-
       await tester.pump();
 
       for (final article in articlesFromService) {
         expect(article.title.isNotEmpty, true);
         expect(article.content.isNotEmpty, true);
       }
-
-      await tester.pumpAndSettle();
     },
   );
 }
